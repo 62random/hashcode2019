@@ -26,6 +26,8 @@ class Slice:
         self.pizza.slices.append(self)
         self.shape()
     
+    def numberCells(self):
+        return (self.k - self.i + 1)*(self.l - self.j + 1)
 
     #Gives a slice it's minimum valid shape (minimum ingredients and minimum area)
     def shape(self):
@@ -34,7 +36,7 @@ class Slice:
             for j in range(self.pizza.MAXH):
                 if i*j < self.pizza.MAXH:
                     if self.i + i <= self.pizza.cols and self.j + j <= self.pizza.rows:
-                        if self.pizza.notTaken(self.i, self.j, i - 1, j - 1):
+                        if self.pizza.notTaken(self.i, self.j, self.i + i - 1, self.j + j - 1):
                             if self.pizza.enoughIngredients(self.i, self.j, self.i + i - 1, self.j + j - 1):
                                 shapes.append((i,j))
 
@@ -54,8 +56,8 @@ class Slice:
         self.rows = current[1]
         self.k = self.i + self.cols - 1
         self.l = self.j + self.rows - 1
-        for x in range(self.i, self.i + self.cols):
-            for y in range(self.j, self.j + self.rows):
+        for x in range(self.i, self.k + 1):
+            for y in range(self.j, self.l + 1):
                 self.cells.append(self.pizza.cells[y][x])
                 self.pizza.cells[y][x].taken = True
                 self.pizza.cells[y][x].slice = (self.i, self.j)
@@ -67,7 +69,7 @@ class Slice:
     #Maxes out slice size 
     def maxSize(self):
         flag = True
-        if self.l + 1 < self.pizza.rows:
+        if self.l + 1 < self.pizza.rows and self.cols + self.numberCells() <= self.pizza.MAXH:
             for x in range(self.i, self.k + 1):
                 if self.pizza.cells[self.l + 1][x].taken:
                     flag = False
@@ -85,7 +87,7 @@ class Slice:
             return 
 
         flag = True
-        if self.k + 1 < self.pizza.cols: 
+        if self.k + 1 < self.pizza.cols and self.rows + self.numberCells() <= self.pizza.MAXH: 
             for y in range(self.j, self.l + 1):
                 if self.pizza.cells[y][self.k + 1].taken:
                     flag = False
@@ -138,10 +140,10 @@ class Pizza:
         return True
 
     #Checks if a bunch of cells is already in a slice
-    def notTaken(self, i, j, rows, cols):
-        for x in range(i, i + cols):
-            for y in range(j, j + rows):
+    def notTaken(self, i, j, k, l):
+        for x in range(i, k + 1):
+            for y in range(j, l + 1):
                 if x is not i or y is not j:
-                    if self.cells[x][y].taken:
+                    if self.cells[y][x].taken:
                         return False
         return True
