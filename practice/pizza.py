@@ -64,6 +64,46 @@ class Slice:
     def hasIngs(self):
         return self.pizza.enoughIngredients(self.i, self.j, self.k, self.l)
 
+    #Maxes out slice size 
+    def maxSize(self):
+        flag = True
+        if self.l + 1 < self.pizza.rows:
+            for x in range(self.i, self.k + 1):
+                if self.pizza.cells[self.l + 1][x].taken:
+                    flag = False
+        else:
+            flag = False
+
+        if flag:
+            self.l = self.l + 1
+            self.rows = self.rows + 1
+            for x in range(self.i, self.k + 1):
+                self.cells.append(self.pizza.cells[self.l][x])
+                self.pizza.cells[self.l][x].taken = True
+                self.pizza.cells[self.l][x].slice = (self.i, self.j)
+            self.maxSize()
+            return 
+
+        flag = True
+        if self.k + 1 < self.pizza.cols: 
+            for y in range(self.j, self.l + 1):
+                if self.pizza.cells[y][self.k + 1].taken:
+                    flag = False
+        else:
+            flag = False
+
+        if flag:
+            self.k = self.k + 1
+            self.cols = self.cols + 1
+            for y in range(self.j, self.l + 1):
+                self.cells.append(self.pizza.cells[y][self.k])
+                self.pizza.cells[y][self.k].taken = True
+                self.pizza.cells[y][self.k].slice = (self.i, self.j)
+            self.maxSize()
+            return 
+
+
+
     def __repr__(self):
         return '%d %d %d %d\n' % (self.i, self.j, self.k, self.l)
 
