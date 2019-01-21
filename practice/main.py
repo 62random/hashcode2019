@@ -27,11 +27,12 @@ for data in FILES:
             ingredients[j][i] = st[j]
     
     pizza = Pizza(ROWS, COLS, ingredients, MINL, MAXH)
-    
+
     for l in pizza.cells:
         for c in l:
             if not c.taken:
                 s = Slice(c, pizza)
+
     size_sum = 0
     for s in pizza.slices:
         s.maxSize()

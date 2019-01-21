@@ -16,7 +16,7 @@ class Slice:
     def __init__(self, cell, pizza):
         self.pizza = pizza
         self.cells = [cell]
-        cell.taken = True 
+        cell.taken = True
         self.rows = 1
         self.cols = 1
         self.i = cell.col 
@@ -34,8 +34,8 @@ class Slice:
         shapes = []
         for i in range(self.pizza.MAXH):
             for j in range(self.pizza.MAXH):
-                if i*j < self.pizza.MAXH:
-                    if self.i + i <= self.pizza.cols and self.j + j <= self.pizza.rows:
+                if i*j <= self.pizza.MAXH:
+                    if (self.i + i <= self.pizza.cols) and (self.j + j <= self.pizza.rows):
                         if self.pizza.notTaken(self.i, self.j, self.i + i - 1, self.j + j - 1):
                             if self.pizza.enoughIngredients(self.i, self.j, self.i + i - 1, self.j + j - 1):
                                 shapes.append((i,j))
@@ -126,6 +126,7 @@ class Pizza:
     def howMuchIng(self, ing, i, j, k, l):
         res = 0
         for x in range(i,k + 1):
+            #print(x)
             for y in range(j,l + 1):
                 if self.ingredients[y][x] == ing:
                     res = res + 1
@@ -143,7 +144,8 @@ class Pizza:
     def notTaken(self, i, j, k, l):
         for x in range(i, k + 1):
             for y in range(j, l + 1):
-                if x is not i or y is not j:
+                if (not x == i) or (not y == j): 
                     if self.cells[y][x].taken:
                         return False
+        
         return True
