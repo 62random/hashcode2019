@@ -107,7 +107,7 @@ class Slice:
 
 
     def __repr__(self):
-        return '%d %d %d %d\n' % (self.i, self.j, self.k, self.l)
+        return '%d %d %d %d\n' % (self.j, self.i, self.l, self.k)
 
 
 
